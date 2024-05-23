@@ -11,13 +11,16 @@ x86_64_asm_object_files := $(patsubst src/impl/x86_64/%.asm, build/x86_64/%.o, $
 
 x86_64_object_files := $(x86_64_c_object_files) $(x86_64_asm_object_files)
 
+# Add the include directory to the compiler flags
+INCLUDE_DIRS := -I src/intf -I src/impl/kernel/include
+
 $(kernel_object_files): build/kernel/%.o : src/impl/kernel/%.c
 	mkdir -p $(dir $@) && \
-	x86_64-elf-gcc -c -I src/intf -ffreestanding $(patsubst build/kernel/%.o, src/impl/kernel/%.c, $@) -o $@
+	x86_64-elf-gcc -c $(INCLUDE_DIRS) -ffreestanding $(patsubst build/kernel/%.o, src/impl/kernel/%.c, $@) -o $@
 
 $(x86_64_c_object_files): build/x86_64/%.o : src/impl/x86_64/%.c
 	mkdir -p $(dir $@) && \
-	x86_64-elf-gcc -c -I src/intf -ffreestanding $(patsubst build/x86_64/%.o, src/impl/x86_64/%.c, $@) -o $@
+	x86_64-elf-gcc -c $(INCLUDE_DIRS) -ffreestanding $(patsubst build/x86_64/%.o, src/impl/x86_64/%.c, $@) -o $@
 
 $(x86_64_asm_object_files): build/x86_64/%.o : src/impl/x86_64/%.asm
 	mkdir -p $(dir $@) && \
@@ -35,3 +38,4 @@ clean:
 	sudo rm -rf targets/x86_64/iso/boot/kernel.bin
 
 .PHONY: build-x86_64 clean
+

@@ -1,5 +1,5 @@
-#include "shell.h"
-#include "print.h"
+#include <shell.h>
+#include <print.h>
 
 void new_shell() {
 
